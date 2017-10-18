@@ -36,18 +36,21 @@ ADD init.sh /init.sh
 RUN chmod 755 /*.sh
 
 # Add phpinfo script for INFO purposes
-RUN echo "<?php phpinfo();" >> /var/www/index.php
+RUN echo "<?php phpinfo();" >> /var/www/html/info.php
 
 RUN service apache2 restart
 
 RUN chown -R www-data:www-data /var/www
 
-WORKDIR /var/www/
+#WORKDIR /var/www/
+
 
 # Volume
-VOLUME /var/www
+#VOLUME /var/www
 
-# Ports: apache2
+COPY run /usr/local/bin/run
+RUN chmod +x /usr/local/bin/run
+RUN a2enmod rewrite
+
 EXPOSE 80
-
-CMD ["/init.sh"]
+CMD ["/usr/local/bin/run"]# Ports: apache2
